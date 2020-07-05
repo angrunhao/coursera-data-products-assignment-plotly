@@ -1,0 +1,32 @@
+---
+title: "Developing Data Products"
+author: "Sebastian Ang"
+date: "05-July-2020"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+## Description
+Interactive map on the **Monthly Mean Temperature Anomaly** between years 1900 to 2016, relative to a base period, where base period ~1951-1980, measured in degrees Celsius. *Years value is measure as number of years after 1900*. 
+
+Data from **Datahub.io** (*free for non-commercial use*).
+
+## Plotly
+```{r, message = FALSE, warning = FALSE}
+library(plotly)
+library(reshape2)
+
+data <- read.csv("data\\monthlyTemp.csv")
+data_wide <- dcast(data, Year ~ Month, value.var="Mean")
+data_matrix <- data.matrix(data_wide)[,-1]
+
+plot_ly(z = ~data_matrix, type = "surface") %>% 
+  layout(title = "Mean Temperature Anomalies Relative To Base Period (~1980)",
+         scene = list(xaxis = list(title = "Month"),
+                      yaxis = list(title = "Years after 1900"),
+                      zaxis = list(title = "Anomalies (deg C)")
+                      )
+         )
+```
